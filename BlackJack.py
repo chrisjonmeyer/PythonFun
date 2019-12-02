@@ -64,10 +64,10 @@ class Hand():
 class Chips():
     
     def __init__(self):
-        
+        pass
 
 
-# Testing Section
+# Testing Section 
 card1 = Card("Hearts","Three")
 #print(card1)
 deck1 = Deck()
