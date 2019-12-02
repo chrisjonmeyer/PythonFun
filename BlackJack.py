@@ -60,22 +60,114 @@ class Hand():
             self.value -= 10
             self.aces -= 1
 
-# Create a Chips Class
+# Create a Chips Class to managae player's chip values
 class Chips():
     
     def __init__(self):
-        pass
+        self.total = 100  # This is a pre-set value, but it can be supplied by the user in the future
+        self.bet = 0
+
+    def win_bet(self):
+        self.total += self.bet
+
+    def lose_bet(self):
+        self.total -= self.bet
+
+# Function Definitions
+def take_bet():
+    while True:
+        try:
+            player_bet = int(input("How much would you like to bet?"))
+        except: 
+            print("Not a valid bet")
+            continue
+        else:
+            break
+    return player_bet
+
+def hit(deck,hand):
+    hit_card = deck.deal()
+    hand.add_card(hit_card)
+    print("Hit ", hit_card, " ", hand.value)
+
+def hit_or_stand(deck,hand):
+    global playing  # to control an upcoming while loop
+    while True:
+        player_response = input("Do you want to Hit?")
+        if (player_response == 'Yes'):
+            hit(deck,hand)
+        else:
+            print("Standing with ", hand.value)
+            playing = False
+            break
+
+def show_some(player,dealer):
+    print("Dealer's Hand:")
+    print(dealer.cards[0])
+    print("Hidden Card\n")
+    print("Player's Hand:", player.value)
+    for card in player.cards:
+        print(card)
+
+def show_all(player,dealer):
+    print("Dealer's Hand: ", dealer.value)
+    for card in dealer.cards:
+        print(card)
+    print("\nPlayer's Hand: ", player.value)
+    for card in player.cards:
+        print(card)
+
+# End of Game Scenarios  - Need to populate these mroe
+def player_busts():
+    print("Player Busts")
+
+def player_wins():
+    print("Player Wins")
+
+def dealer_busts():
+    print("Dealer Busts")
+
+def dealer_wins():
+    print("Dealer Wins")
+
+def push():
+    print("Push")
 
 
 # Testing Section 
-card1 = Card("Hearts","Three")
+#card1 = Card("Hearts","Three")
 #print(card1)
-deck1 = Deck()
-deck1.shuffle()
+# deck1 = Deck()
+# deck1.shuffle()
 #print(deck1)
-player1 = Hand()
-player1.add_card(deck1.deal())
-player1.add_card(deck1.deal())
-for card in player1.cards:
-    print(card)
-print(player1.value)
+# player1 = Hand()
+# player1.add_card(deck1.deal())
+# player1.add_card(deck1.deal())
+# dealer1 = Hand()
+# dealer1.add_card(deck1.deal())
+# dealer1.add_card(deck1.deal())
+# for card in player1.cards:
+#     print(card)
+# print(player1.value)
+# show_all(player1,dealer1)
+
+# The actual game!
+
+while True:
+    print("Welcome to the BlackJack Table")
+    # Creating/Shuffling the deck
+    print("Shuffling the deck")
+    main_deck = Deck()
+    main_deck.shuffle()
+    # Dealing cards to player and dealer
+    player = Hand()
+    dealer = Hand()
+    player.add_card(main_deck.deal())
+    player.add_card(main_deck.deal())
+    dealer.add_card(main_deck.deal())
+    dealer.add_card(main_deck.deal())
+    player_bet = input("How much would you like to bet?")
+    show_some(player,dealer)
+    hit_or_stand(main_deck,player)
+    break
+    
