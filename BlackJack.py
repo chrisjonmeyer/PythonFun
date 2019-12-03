@@ -88,7 +88,7 @@ def take_bet():
 def hit(deck,hand):
     hit_card = deck.deal()
     hand.add_card(hit_card)
-    print("Hit ", hit_card, " ", hand.value)
+    #print("Hit ", hit_card, " ", hand.value)     #Uncomment for debugging
 
 def hit_or_stand(deck,hand):
     global playing  # to control an upcoming while loop
@@ -152,12 +152,17 @@ def push():
 # The actual game!
 
 # Setting up player's Chips
-print("Welcome to the BlackJack Table")
+print("##################################")
+print("# Welcome to the BlackJack Table #")
+print("##################################")
 player_chips = Chips()
 print("You are starting off with", player_chips.total, "chips.")
+input("Press enter to start...")
 
 while True:
+    playing = True
     # Creating/Shuffling the deck
+    player_bet = int(input("How much would you like to bet?"))
     print("Shuffling the deck\nDealing the cards")
     main_deck = Deck()
     main_deck.shuffle()
@@ -168,7 +173,6 @@ while True:
     player.add_card(main_deck.deal())
     dealer.add_card(main_deck.deal())
     dealer.add_card(main_deck.deal())
-    player_bet = int(input("How much would you like to bet?"))
     show_some(player,dealer)
     while playing:
         hit_or_stand(main_deck,player)
