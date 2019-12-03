@@ -67,11 +67,11 @@ class Chips():
         self.total = 100  # This is a pre-set value, but it can be supplied by the user in the future
         self.bet = 0
 
-    def win_bet(self):
-        self.total += self.bet
+    def win_bet(self,bet):
+        self.total += bet
 
-    def lose_bet(self):
-        self.total -= self.bet
+    def lose_bet(self,bet):
+        self.total -= bet
 
 # Function Definitions
 def take_bet():
@@ -92,14 +92,12 @@ def hit(deck,hand):
 
 def hit_or_stand(deck,hand):
     global playing  # to control an upcoming while loop
-    while True:
-        player_response = input("Do you want to Hit?")
-        if (player_response == 'Yes'):
-            hit(deck,hand)
-        else:
-            print("Standing with ", hand.value)
-            playing = False
-            break
+    player_response = input("Do you want to Hit?")
+    if (player_response == 'Yes'):
+        hit(deck,hand)
+    else:
+        print("Standing with ", hand.value)
+        playing = False
 
 def show_some(player,dealer):
     print("Dealer's Hand:")
@@ -153,10 +151,14 @@ def push():
 
 # The actual game!
 
+# Setting up player's Chips
+print("Welcome to the BlackJack Table")
+player_chips = Chips()
+print("You are starting off with", player_chips.total, "chips.")
+
 while True:
-    print("Welcome to the BlackJack Table")
     # Creating/Shuffling the deck
-    print("Shuffling the deck")
+    print("Shuffling the deck\nDealing the cards")
     main_deck = Deck()
     main_deck.shuffle()
     # Dealing cards to player and dealer
@@ -166,8 +168,39 @@ while True:
     player.add_card(main_deck.deal())
     dealer.add_card(main_deck.deal())
     dealer.add_card(main_deck.deal())
-    player_bet = input("How much would you like to bet?")
+    player_bet = int(input("How much would you like to bet?"))
     show_some(player,dealer)
-    hit_or_stand(main_deck,player)
-    break
+    while playing:
+        hit_or_stand(main_deck,player)
+        show_some(player,dealer)
+        if (player.value > 21):
+            break
+    if (player.value > 21):
+        player_busts()
+        player_chips.lose_bet(player_bet)
+    else:
+        show_all(player,dealer)
+        while dealer.value < 17:
+            dealer.add_card(main_deck.deal())
+            show_all(player,dealer)
+        if (dealer.value > 21):
+            dealer_busts()
+            player_chips.win_bet(player_bet)
+        elif (player.value > dealer.value):
+            player_wins()
+            player_chips.win_bet(player_bet)
+        elif (player.value == dealer.value):
+            push()
+        else:
+            dealer_wins()
+            player_chips.lose_bet(player_bet)
+    print("You currently have", player_chips.total, "chips.")
+    if (player_chips.total <= 0):
+        print("Game Over")
+        break
+    if (input("Would you like to play again?") == 'No'):
+        print("You're walking away with", player_chips.total, "chips.")
+        break
+
+        
     
